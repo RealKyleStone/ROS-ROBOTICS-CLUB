@@ -1,0 +1,19 @@
+[workspace]
+authors = ["RealKyleStone <59999816+RealKyleStone@users.noreply.github.com>"]
+channels = ["robostack-humble", "conda-forge"]
+name = "my_ros2_project"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[activation]
+scripts = ["install/local_setup.bat"]
+
+[tasks]
+sim = '"$CONDA_PREFIX/Library/lib/turtlesim/turtlesim_node.exe"'
+build = { cmd = "python -m colcon build --symlink-install", inputs = ["src"] }
+hello = { cmd = "python -m ros2 run my_package my_node", depends-on = ["build"] }
+
+[dependencies]
+ros-humble-desktop = ">=0.10.0,<0.11"
+ros-humble-turtlesim = ">=1.4.3,<2"
+colcon-common-extensions = ">=0.3.0,<0.4"
