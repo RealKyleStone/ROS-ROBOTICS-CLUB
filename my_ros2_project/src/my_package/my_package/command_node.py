@@ -30,9 +30,17 @@ class CommandNode(Node):
             String, '/speech_text', self._on_speech, 10
         )
 
+        # Timer for continuous movement (e.g. "go" command)
+        self._continuous_twist = None
+        self._timer = self.create_timer(0.1, self._publish_continuous)
+
         self.get_logger().info(
             f'Command node ready — publishing velocity to {topic}'
         )
+
+    def _publish_continuous(self):
+        if self._continuous_twist is not None:
+            self.publisher.publish(self._continuous_twist)
 
     def _on_speech(self, msg: String):
         text = msg.data.lower().strip()
@@ -55,7 +63,15 @@ class CommandNode(Node):
             self.get_logger().warn(f'Unknown command: "{text}"')
             return
 
-        self.publisher.publish(twist)
+        # "go" starts continuous forward; "stop" cancels it; others are one-shot
+        if 'go' in text:
+            self._continuous_twist = twist
+        elif 'stop' in text:
+            self._continuous_twist = None
+            self.publisher.publish(twist)
+        else:
+            self._continuous_twist = None
+            self.publisher.publish(twist)
 
 
 def main(args=None):
