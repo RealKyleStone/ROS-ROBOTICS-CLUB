@@ -11,9 +11,15 @@ scripts = ["install/local_setup.bat"]
 [tasks]
 sim = '"$CONDA_PREFIX/Library/lib/turtlesim/turtlesim_node.exe"'
 build = { cmd = "python -m colcon build --symlink-install", inputs = ["src"] }
-hello = { cmd = "python -m ros2 run my_package my_node", depends-on = ["build"] }
+hello = { cmd = "python -c \"from my_package.my_node import main; main()\"", depends-on = ["build"] }
+speech = { cmd = "python -c \"import sys; sys.argv=['','--ros-args','-p','device:=4']; from my_package.speech_node import main; main()\"", depends-on = ["build"] }
+command = { cmd = "python -c \"from my_package.command_node import main; main()\"", depends-on = ["build"] }
 
 [dependencies]
 ros-humble-desktop = ">=0.10.0,<0.11"
 ros-humble-turtlesim = ">=1.4.3,<2"
 colcon-common-extensions = ">=0.3.0,<0.4"
+
+[pypi-dependencies]
+vosk = ">=0.3.45, <0.4"
+sounddevice = ">=0.5.5, <0.6"

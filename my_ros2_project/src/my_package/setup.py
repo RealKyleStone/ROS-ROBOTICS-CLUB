@@ -21,6 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             'my_node = my_package.my_node:main',
+            'speech_node = my_package.speech_node:main',
+            'command_node = my_package.command_node:main',
         ],
     },
 )
