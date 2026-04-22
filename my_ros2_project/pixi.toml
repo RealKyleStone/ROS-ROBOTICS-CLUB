@@ -12,8 +12,10 @@ scripts = ["install/local_setup.bat"]
 sim = '"$CONDA_PREFIX/Library/lib/turtlesim/turtlesim_node.exe"'
 build = { cmd = "python -m colcon build --symlink-install", inputs = ["src"] }
 hello = { cmd = "python -c \"from my_package.my_node import main; main()\"", depends-on = ["build"] }
-speech = { cmd = "python -c \"import sys; sys.argv=['','--ros-args','-p','device:=4']; from my_package.speech_node import main; main()\"", depends-on = ["build"] }
+speech = { cmd = "python -c \"import sys; sys.argv=['','--ros-args','-p','device_name:=Microphone (Realtek(R) Audio)']; from my_package.speech_node import main; main()\"", depends-on = ["build"] }
+speech-openai = { cmd = "python -c \"import sys; sys.argv=['','--ros-args','-p','device_name:=Microphone (Realtek(R) Audio)','-p','speech_backend:=openai']; from my_package.speech_node import main; main()\"", depends-on = ["build"] }
 command = { cmd = "python -c \"from my_package.command_node import main; main()\"", depends-on = ["build"] }
+command-llm = { cmd = "python -c \"import sys; sys.argv=['','--ros-args','-p','command_backend:=llm']; from my_package.command_node import main; main()\"", depends-on = ["build"] }
 
 [dependencies]
 ros-humble-desktop = ">=0.10.0,<0.11"
@@ -23,3 +25,4 @@ colcon-common-extensions = ">=0.3.0,<0.4"
 [pypi-dependencies]
 vosk = ">=0.3.45, <0.4"
 sounddevice = ">=0.5.5, <0.6"
+openai = ">=1.75.0, <2"

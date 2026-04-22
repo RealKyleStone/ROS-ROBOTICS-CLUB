@@ -40,6 +40,10 @@ pixi run build
 |---------|-------------|
 | `pixi run sim` | Launch turtlesim simulation |
 | `pixi run hello` | Run the custom node (auto-builds first) |
+| `pixi run speech` | Run speech capture with VOSK backend |
+| `pixi run command` | Run command execution node (keyword mode) |
+| `pixi run speech-openai` | Run speech capture with OpenAI STT (push-to-talk) |
+| `pixi run command-llm` | Run command node with GPT tool calling + TTS |
 | `pixi run build` | Rebuild packages |
 
 ## Project Structure
@@ -77,6 +81,38 @@ pixi add ros-humble-<package-name>
 Browse available packages at [robostack](https://robostack.github.io/).
 
 ## Troubleshooting
+
+## LLM Voice Mode (OpenAI)
+
+This project now supports two speech pipelines controlled by ROS parameters:
+
+- `speech_backend:=vosk` (default)
+- `speech_backend:=openai`
+
+And two command modes:
+
+- `command_backend:=keyword` (default)
+- `command_backend:=llm` or `command_backend:=hybrid`
+
+### Required environment variable
+
+Set your OpenAI API key before running OpenAI modes:
+
+```powershell
+$env:OPENAI_API_KEY = "<your-api-key>"
+```
+
+### Example OpenAI run sequence
+
+Use separate terminals:
+
+```powershell
+pixi run sim
+pixi run speech-openai
+pixi run command-llm
+```
+
+`speech-openai` uses push-to-talk style capture: press Enter in that terminal to record a short command window.
 
 ### "failed to create process" errors
 Some ROS2 commands have symlink issues on Windows. Use the Python module workaround:
